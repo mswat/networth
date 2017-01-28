@@ -35,24 +35,25 @@ function listAndSelectInstitutions(callback) {
 function accessBank(id, callback) {
 	id=id-1;
 	console.log("Accessing " + instLong[id] +"........");
-	getCredentials();
-	plaidClient.addAuthUser(instShort[id], {
-	  username: 'plaid_test',
-	  password: 'plaid_good',
-	  pin: '1234'
-	}, {list:true}, function(err, mfaResponse, response) {
-	  if (err != null) {
-	    // Bad request - invalid credentials, account locked, etc.
-	    //Todo - add response behavior
-	    console.error(err);
-	  } 
+	getCredentials("Provide credentials for " + instLong[id],function(username, password, pin){
+		plaidClient.addAuthUser(instShort[id], {
+		  username: username,
+		  password: password,
+		  pin: pin
+		}, {list:true}, function(err, mfaResponse, response) {
+		  if (err != null) {
+		    // Bad request - invalid credentials, account locked, etc.
+		    //Todo - add response behavior
+		    console.error(err);
+		  } 
 
-	  else if (mfaResponse != null) {
-	  	handleMFA(mfaResponse, callback);
-	  } 
-	  else {
-	    callback(response.accounts);
-	  }
+		  else if (mfaResponse != null) {
+		  	handleMFA(mfaResponse, callback);
+		  } 
+		  else {
+		    callback(response.accounts);
+		  }
+		});
 	});
 }
 
@@ -145,11 +146,12 @@ function getInput(string1, callback) {
 	});
 }
 
-function getCredentials(callback) {
+function getCredentials(bankEntry, callback) {
+	console.log(bankEntry);
 	prompt.start();
-	prompt.get(['username','password'],function(err, result){
+	prompt.get(['username','password','pin'],function(err, result){
 		if(err) console.error(err);
-		callback(result.username, result.password)
+		callback(result.username, result.password, result.pin)
 	})
 }
 
