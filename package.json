@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/mswat/networth/issues"
   },
-  "homepage": "https://github.com/mswat/networth#readme"
+  "homepage": "https://github.com/mswat/networth#readme",
+  "dependencies": {
+    "electron": "^1.4.15",
+    "plaid": "^1.2.0"
+  }
 }
